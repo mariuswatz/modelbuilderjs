@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>UVertexPJS02A.js | Modelbuilder.js | Marius Watz</title>
+	<meta charset="UTF-8" />
+	<link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="../src/UVertex.js"></script>
+	<script type="text/javascript" src="../src/UVertexList.js"></script>
+	<script type="text/javascript" src="js/processing.js"></script>
+	<style type="text/css">
+	canvas {
+	display: block;
+	margin:0;
+	padding:0;
+	/* disable selection of canvas */
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select:none;
+	-ms-user-select:none;
+	-khtml-user-select:none;
+	user-select: none;
+}
+
+body,canvas {
+	margin:0;
+	padding:0;
+	overflow: hidden;
+	background:#060606;
+}
+
+#credit {
+	padding:5px;
+	font-family:verdana;
+	font-size:9px;
+	margin:0;
+	width:140px;
+	background:#F0F0F0;
+	height:100%;
+	float:left;
+	overflow: hidden;
+}
+
+#credit a {color:#555;}
+ 
+#credit p {
+	padding:0;
+	margin:0 0 1em 0;
+}
+
+#credit .link {
+	padding-bottom:0.5em;
+	margin-bottom:1em;
+	border-bottom:1px dotted #000;
+	
+}
+
+.link a {
+	color:#FF9900;
+	text-decoration: none;
+}
+
+#canvas1 {
+	margin-left:150px;
+}
+
+	</style>
+</head>
+<body>
+
+<div id="credit">
+<div class="link">
+<a href="https://github.com/mariuswatz/modelbuilderjs">modelbuilder.js</a>
+</div>
+
+<p><strong>UVertexPJS02A.js</strong><br />
+Demo of my first efforts porting Modelbuilder to pure 
+JavaScript. This sketch demonstrates basic use of 
+UVertex and UVertexList integrated with <a href="http://processingjs.org/">Processing.js</a> 
+for drawing.</p>
+
+<p>I'm using Processing.js as a JS framework rather than
+as a Processing "emulator" to get a better feeling for 
+JS coding conventions. Pre-compiling Processing code works 
+well 90% of the time, but I've been burned by  
+
+</p> 
+</div>
+
+<canvas id="canvas1" width="200" height="200"></canvas>
+
+<script id="script1" type="text/javascript" src="UVertexPJS02A.js" data-processing-target="mycode"></script>
+
+<script type="text/javascript">
+	sketch.p.rescale(
+    	window.innerWidth-150,
+		window.innerHeight
+    );
+
+  window.addEventListener('resize', function(event) {
+	    sketch.p.rescale(
+	    	window.innerWidth-150,
+			window.innerHeight
+	    );
+  });
+</script>	
+<!-- 
+	<pre id="code1"></pre>
+<script>
+document.getElementById("code1").textContent = document.getElementById("script1").text;
+</script>
+	 -->
+</body>
+</html>

@@ -1,17 +1,19 @@
 
 function UVertex(x, y,z) {
 	this.self=this;
+	this.col=0xFFFFFFFF;
+	
 //	var arglen=arguments.length;	
 	
-//    if (arglen==1) {
-//    	this.x=v.x;
-//    	this.y=v.y;
-//    	this.z=v.z;
-//    }
+    if (arguments.length==1) {
+    	this.x=x.x;
+    	this.y=x.y;
+    	this.z=x.z;
+    }
 //    else {
     	this.x = x || 0;
     	this.y = y || 0;
-    	this.z = z || 0;
+    	this.z = z || -10;
 //    }
 }
 
@@ -34,6 +36,12 @@ UVertex.prototype.add = function(vx,vy,vz) {
 	this.y+=ty;
 	this.z+=tz;
 	return this.self;
+};
+
+UVertex.prototype.copy = function() {
+	var vcopy=new UVertex(this.x,this.y,this.z);
+	vcopy.col=this.col;
+	return vcopy;
 };
 
 UVertex.prototype.sub = function(vx,vy,vz) {
@@ -72,150 +80,53 @@ UVertex.prototype.mult = function(mx,my,mz) {
 };
 
 UVertex.prototype.toString = function() {
-	return "(" + this.x + ", " + this.y + ")";
+	return "<" + this.x + "," + this.y + 
+	"," + this.z+">";
+};
+
+UVertex.prototype.setColor=function(c,a) {
+	if(a!=undefined) c=(a<<24) | (c&0x00ffffff);
+	this.col=c;
+	
+	return this.self;				
+};
+
+UVertex.prototype.rotateAxis= function(axis,deg) {
+	var sin=Math.sin(deg),cos=Math.cos(deg);
+	 var a,b,a2,b2;
+
+//	 x=y,z	y=x,z	z=x,y
+
+	 a=(axis==0 ? this.y : this.x);
+	 b=(axis==1 ? this.z : this.y);
+	 
+	 a2=a*cos-b*sin;
+	 b2=a*sin+b*cos;
+	 
+	 console.log(axis+" "+deg+" "+this.toString());
+	 this.x=(axis==0 ? this.x : a2);
+	 this.y=(axis==1 ? this.y : (axis==0 ? a2:b2));
+	 this.z=(axis==2 ? this.z : b2);
+	 console.log("-> "+axis+" "+a+" "+b+" "+a2+" "+b2);
+	 console.log("-> "+axis+" "+deg+" "+this.toString());
+	 
+	 return this.self;
 };
 
 
-UVertex.prototype.rotateX= function(deg) {
- var sindeg,cosdeg;
- var newy,newz;
-
- sindeg=Math.sin(deg); cosdeg=Math.cos(deg);
- newy=this.y*cosdeg-this.z*sindeg;
- newz=this.y*sindeg+this.z*cosdeg;
- this.y=newy;
- this.z=newz;
- 
- return this.self;
-}
-
-UVertex.prototype.rotateY= function(deg) {
- var sindeg,cosdeg;
- var newx,newz;
-
- sindeg=Math.sin(deg); 
- cosdeg=Math.cos(deg);
- newx=this.x*cosdeg-this.z*sindeg;
- newz=this.x*sindeg+this.z*cosdeg;
- this.x=newx;
- this.z=newz;
- 
-	return this.self;
+UVertex.prototype.rotateX = function(deg) {
+	return this.rotateAxis(0,deg);
 };
 
-UVertex.prototype.rotate= function(deg) {
-	 return this.rotateZ(deg);
+
+UVertex.prototype.rotateY = function(deg) {
+	return this.rotateAxis(1,deg);
 };
 
 UVertex.prototype.rotateZ= function(deg) {
- var sindeg,cosdeg;
- var newy,newx;
- var x = this.x;
-	var y = this.y;
-
- sindeg=Math.sin(deg); 
- cosdeg=Math.cos(deg);
- newx=x*cosdeg-y*sindeg;
- newy=x*sindeg+y*cosdeg;
- this.x=newx;
- this.y=newy;
- 
- return this.self;
+	return this.rotateAxis(2,deg);
 };
 
-/*
-UVertex.prototype.div = function(v) {
-	return new UVertex(this.x / v.x, this.y / v.y);
-}
-
-UVertex.prototype.scale = function(coef) {
-	return new UVertex(this.x*coef, this.y*coef);
-}
-
-UVertex.prototype.mutableSet = function(v) {
-	this.x = v.x;
-	this.y = v.y;
-	return this;
-}
-
-UVertex.prototype.mutableAdd = function(v) {
-	this.x += v.x;
-	this.y += v.y;
-	return this;
-}
-
-UVertex.prototype.mutableSub = function(v) {
-	this.x -= v.x;
-	this.y -= v.y;
-	return this;
-}
-
-UVertex.prototype.mutableMul = function(v) {
-	this.x *= v.x;
-	this.y *= v.y;
-	return this;
-}
-
-UVertex.prototype.mutableDiv = function(v) {
-	this.x /= v.x;
-	this.y /= v.y;
-	return this;
-}
-
-UVertex.prototype.mutableScale = function(coef) {
-	this.x *= coef;
-	this.y *= coef;
-	return this;
-}
-
-UVertex.prototype.equals = function(v) {
-	return this.x == v.x && this.y == v.y;
-}
-
-UVertex.prototype.epsilonEquals = function(v, epsilon) {
-	return Math.abs(this.x - v.x) <= epsilon && Math.abs(this.y - v.y) <= epsilon;
-}
-
-UVertex.prototype.length = function(v) {
-	return Math.sqrt(this.x*this.x + this.y*this.y);
-}
-
-UVertex.prototype.length2 = function(v) {
-	return this.x*this.x + this.y*this.y;
-}
-
-UVertex.prototype.dist = function(v) {
-	return Math.sqrt(this.dist2(v));
-}
-
-UVertex.prototype.dist2 = function(v) {
-	var x = v.x - this.x;
-	var y = v.y - this.y;
-	return x*x + y*y;
-}
-
-UVertex.prototype.normal = function() {
-	var m = Math.sqrt(this.x*this.x + this.y*this.y);
-	return new UVertex(this.x/m, this.y/m);
-}
-
-UVertex.prototype.dot = function(v) {
-	return this.x*v.x + this.y*v.y;
-}
-
-UVertex.prototype.angle = function(v) {
-	return Math.atan2(this.x*v.y-this.y*v.x,this.x*v.x+this.y*v.y);
-}
-
-UVertex.prototype.angle2 = function(vLeft, vRight) {
-	return vLeft.sub(this).angle(vRight.sub(this));
-}
-
-UVertex.prototype.rotate = function(origin, theta) {
-	var x = this.x - origin.x;
-	var y = this.y - origin.y;
-	return new UVertex(x*Math.cos(theta) - y*Math.sin(theta) + origin.x, x*Math.sin(theta) + y*Math.cos(theta) + origin.y);
-}
-
-
-*/
+UVertex.prototype.rotate= function(deg) {
+	 return this.rotateAxis(2,deg);
+};
