@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Verlet Cloth Simulation</title>
+	<meta charset="UTF-8" />
+	<link href='http://fonts.googleapis.com/css?family=Libre+Baskerville:400,700,400italic' rel='stylesheet' type='text/css'>
+	<script type="text/javascript" src="js/verlet-js/vec2.js"></script>
+	<script type="text/javascript" src="js/verlet-js/constraint.js"></script>
+	<script type="text/javascript" src="js/verlet-js/verlet.js"></script>
+	<script type="text/javascript" src="js/verlet-js/objects.js"></script>
+	<script type="text/javascript" src="../src/UVertex.js"></script>
+	
+	<style type="text/css">
+	canvas {
+	display: block;
+	margin: 34px auto;
+	background: #fff;
+	box-shadow: 2px 2px 8px 0px rgba(0,0,0,0.1);
+	
+	/* disable selection of canvas */
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-o-user-select:none;
+	-ms-user-select:none;
+	-khtml-user-select:none;
+	user-select: none;
+}
+	</style>
+</head>
+<body>
+	<div id="header">
+	<canvas id="canv" style="width: 800px; height: 500px; background: #000;"></canvas>
+	<script type="text/javascript">
+
+	function lerp(a, b, p) {
+		return (b-a)*p + a;
+	}
+	
+	window.onload = function() {
+		var canvas = document.getElementById("canv");
+		var g=canvas.getContext("2d");
+
+		// canvas dimensions
+		var width = parseInt(canvas.style.width);
+		var height = parseInt(canvas.style.height);
+	      var style = canvas.style;
+	      style.setProperty("image-rendering", "optimizeQuality", "important");
+	      style.setProperty("-ms-interpolation-mode", "bicubic", "important");
+
+	      if (g.hasOwnProperty("mozImageSmoothingEnabled")) g = true
+
+		var n=100;
+		var vl=[];
+		for(var i=0; i<n; i++) {
+			vl.push(new UVertex(Math.random()*width,Math.random()*height));
+			console.log(vl[i].toString());
+			
+		}
+		
+		// animation loop
+		var loop = function() {
+			
+			g.fillStyle="rgba(255,255,255,1)";
+			g.font="20px Georgia";
+			g.fillText("vl "+vl.length,10,50);
+
+			g.fillStyle=null;
+			g.strokeStyle="#FFFFFF";
+
+			g.beginPath();
+			for(var i=0; i<vl.length-1; i++) {
+				if(i==0) g.moveTo(vl[i].x,vl[i].y);
+				else g.lineTo(vl[i+1].x,vl[i+1].y);
+				
+			}
+			g.stroke();
+			
+			requestAnimFrame(loop);
+		};
+
+		loop();
+	};
+	
+	
+	</script>
+	<div id="footer">
+		Copyright 2013 Sub Protocol and other contributors.
+		<br/><a href="http://subprotocol.com/">http://subprotocol.com/</a>
+	</div>
+</body>
+</html>
